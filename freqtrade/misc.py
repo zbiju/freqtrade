@@ -193,6 +193,12 @@ def parse_args(args: List[str], description: str):
         metavar='INT',
         nargs='?',
     )
+    parser.add_argument(
+        '--sqlite-path',
+        help='Define path to sqlite',
+        type=str,
+        dest='sqlite_path',
+    )
 
     build_subcommands(parser)
     return parser.parse_args(args)

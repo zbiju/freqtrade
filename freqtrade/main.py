@@ -423,16 +423,15 @@ def create_trade(stake_amount: float, interval: int) -> bool:
     return True
 
 
-def init(config: dict, db_url: Optional[str] = None) -> None:
+def init(config: dict) -> None:
     """
     Initializes all modules and updates the config
     :param config: config as dict
-    :param db_url: database connector string for sqlalchemy (Optional)
     :return: None
     """
     # Initialize all modules
     rpc.init(config)
-    persistence.init(config, db_url)
+    persistence.init(config)
     exchange.init(config)
 
     strategy = Strategy()
@@ -521,6 +520,11 @@ def main(sysargv=sys.argv[1:]) -> int:
             )
         else:
             logger.info('Dry run is disabled. (--dry_run_db ignored)')
+
+    # Add the sqlite-path
+    if args.sqlite_path:
+        logger.info('Using sqlite_path: %s', args.sqlite_path)
+        _CONF.update({'sqlite_path': args.sqlite_path})
 
     try:
         init(_CONF)
