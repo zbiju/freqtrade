@@ -24,10 +24,10 @@ class MACDStrategy(IStrategy):
 
     # Optimal stoploss designed for the strategy
     # This attribute will be overridden if the config file contains "stoploss"
-    stoploss = -0.3
+    stoploss = -0.15
 
     # Optimal ticker interval for the strategy
-    ticker_interval = 5
+    ticker_interval = 1
 
     def populate_indicators(self, dataframe: DataFrame):
         # MACD
@@ -35,6 +35,12 @@ class MACDStrategy(IStrategy):
         dataframe['macd'] = macd['macd']
         dataframe['macdsignal'] = macd['macdsignal']
         dataframe['macdhist'] = macd['macdhist']
+
+        # ADX
+        dataframe['adx'] = ta.ADX(dataframe)
+
+        # RSI
+        dataframe['rsi'] = ta.RSI(dataframe)
 
         # EMA - Exponential Moving Average
         # dataframe['ema3'] = ta.EMA(dataframe, timeperiod=3)
@@ -49,17 +55,34 @@ class MACDStrategy(IStrategy):
         # print('BUY', dataframe['macdhist'] > 0, dataframe['macd'] > dataframe['macdsignal'])
         dataframe.loc[
             (
-                (dataframe['macdhist'] > 0) &
-                (dataframe['macd'] > dataframe['macdsignal'])
+                (dataframe['adx'] > 25)
+                # & (dataframe['rsi'] > 70)
+                & (dataframe['macdhist'] > 0)
+                & (qtpylib.crossed_above(dataframe['macd'], dataframe['macdsignal']))
             ),
             'buy'] = 1
+
+        # print('BUY', dataframe.loc[
+        #     (
+        #         (dataframe['adx'] > 25) &
+        #         (dataframe['rsi'] > 70) &
+        #         (dataframe['macdhist'] > 0) &
+        #         (qtpylib.crossed_above(dataframe['macd'], dataframe['macdsignal']))
+        #     )])
         return dataframe
 
     def populate_sell_trend(self, dataframe: DataFrame):
         dataframe.loc[
             (
-                (dataframe['macdhist'] < 0) &
-                (dataframe['macd'] < dataframe['macdsignal'])
+                (dataframe['adx'] < 25)
+                # & (dataframe['rsi'] < 30)
+                & (dataframe['macdhist'] < 0)
+                & (qtpylib.crossed_below(dataframe['macd'], dataframe['macdsignal']))
             ),
             'sell'] = 1
+        # print('SELL', dataframe.loc[
+        #     (
+        #         (dataframe['macdhist'] < 0) &
+        #         (qtpylib.crossed_below(dataframe['macd'], dataframe['macdsignal']))
+        #     )])
         return dataframe

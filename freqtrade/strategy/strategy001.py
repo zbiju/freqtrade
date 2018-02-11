@@ -71,6 +71,12 @@ class CustomStrategy(IStrategy):
             ),
             'buy'] = 1
 
+        print("BUY\n", dataframe.loc[
+            (
+                qtpylib.crossed_above(dataframe['ema20'], dataframe['ema50']) &
+                (dataframe['ha_close'] > dataframe['ema20']) &
+                (dataframe['ha_open'] < dataframe['ha_close'])  # green bar
+            )])
         return dataframe
 
     def populate_sell_trend(self, dataframe: DataFrame) -> DataFrame:
