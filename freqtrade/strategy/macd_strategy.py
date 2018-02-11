@@ -42,7 +42,7 @@ class MACDStrategy(IStrategy):
         # dataframe['ema10'] = ta.EMA(dataframe, timeperiod=10)
         # dataframe['ema50'] = ta.EMA(dataframe, timeperiod=50)
 
-        print(dataframe)
+        #print(dataframe)
         return dataframe
 
     def populate_buy_trend(self, dataframe: DataFrame):
