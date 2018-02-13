@@ -57,7 +57,7 @@ class MACDStrategy(IStrategy):
             (
                 (dataframe['adx'] > 25)
                 # & (dataframe['rsi'] > 70)
-                & (dataframe['macdhist'] > 0)
+                # & (dataframe['macdhist'] > 0)
                 & (qtpylib.crossed_above(dataframe['macd'], dataframe['macdsignal']))
             ),
             'buy'] = 1
@@ -76,7 +76,7 @@ class MACDStrategy(IStrategy):
             (
                 (dataframe['adx'] < 25)
                 # & (dataframe['rsi'] < 30)
-                & (dataframe['macdhist'] < 0)
+                # & (dataframe['macdhist'] < 0)
                 & (qtpylib.crossed_below(dataframe['macd'], dataframe['macdsignal']))
             ),
             'sell'] = 1
